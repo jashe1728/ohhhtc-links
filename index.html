@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#4A6494">
+<meta name="theme-color" content="#1B2B4B">
 <title>OhhhTC!!!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 
   body {
     min-height: 100vh;
-    background: #4A6494;
+    background: #1B2B4B;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,6 +30,59 @@
     max-width: 360px;
     text-align: center;
     box-shadow: 0 24px 64px rgba(27,43,75,.28);
+    position: relative;
+  }
+
+  /* ── Language switcher (light card variant) ── */
+  .lang-wrap {
+    position: absolute; top: 14px; right: 14px;
+    z-index: 300;
+  }
+  .lang-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(27,43,75,.06);
+    border: 1px solid rgba(27,43,75,.18);
+    border-radius: 20px;
+    color: #1B2B4B;
+    font-family: Inter, sans-serif;
+    font-size: .72rem; font-weight: 600;
+    padding: 5px 10px 5px 8px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .lang-btn:hover { background: rgba(27,43,75,.12); }
+  .lang-btn[aria-expanded="true"] { background: rgba(27,43,75,.14); }
+  .lang-btn-flag { width: 22px; height: 15px; border-radius: 3px; overflow: hidden; flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.18); display: inline-flex; }
+  .lang-btn-flag svg { width: 100%; height: 100%; display: block; }
+  .lang-btn-code { letter-spacing: .04em; }
+  .lang-btn-caret { width: 8px; height: 8px; margin-left: 1px; opacity: .7;
+    transition: transform .2s; }
+  .lang-wrap.open .lang-btn-caret { transform: rotate(180deg); }
+  .lang-menu {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    min-width: 172px;
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 10px 36px rgba(27,43,75,.22);
+    padding: 6px; margin: 0; list-style: none;
+    display: none; z-index: 300;
+  }
+  .lang-wrap.open .lang-menu { display: block; }
+  .lang-opt {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%;
+    background: none; border: none; border-radius: 9px;
+    color: #1a1a1a; font-family: Inter, sans-serif;
+    font-size: .8rem; font-weight: 500;
+    padding: 8px 10px; cursor: pointer; text-align: left;
+  }
+  .lang-opt:hover { background: rgba(27,43,75,.06); }
+  .lang-opt-flag { width: 22px; height: 15px; border-radius: 3px; overflow: hidden; flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.12); display: inline-flex; }
+  .lang-opt-flag svg { width: 100%; height: 100%; display: block; }
+  .lang-opt-name { flex: 1; }
+  .lang-opt[aria-selected="true"]::after {
+    content: "✓"; font-weight: 700; color: #2D5086;
   }
 
   .logo {
@@ -105,12 +158,12 @@
 
   /* Menu — navy */
   .btn-menu {
-    background: #4A6494;
+    background: #1B2B4B;
     color: #FDFAF4;
-    box-shadow: 0 2px 12px rgba(74,100,148,.25);
+    box-shadow: 0 2px 12px rgba(27,43,75,.3);
   }
   .btn-menu .icon { background: rgba(255,255,255,.15); color: #fff; }
-  .btn-menu:hover { box-shadow: 0 6px 20px rgba(74,100,148,.35); transform: translateY(-2px); }
+  .btn-menu:hover { box-shadow: 0 6px 20px rgba(27,43,75,.45); transform: translateY(-2px); }
   .btn-menu .text-sub { opacity: .6; }
 
   /* Google — white */
@@ -143,6 +196,9 @@
 
   /* Google icon SVG inline */
   .google-svg { width: 20px; height: 20px; }
+  .fork-svg { width: 20px; height: 20px; }
+  .menu-svg { width: 20px; height: 20px; }
+
 </style>
 </head>
 <body>
@@ -154,23 +210,46 @@
   <div class="brand">OhhhTC<em>!!!</em></div>
   <p class="tagline">Costa da Caparica · Almada</p>
 
+  <div class="lang-wrap" id="langWrap">
+    <button type="button" class="lang-btn" id="langBtn" aria-haspopup="listbox"
+      aria-expanded="false" aria-label="Idioma / Language">
+      <span class="lang-btn-flag" id="langBtnFlag"></span>
+      <span class="lang-btn-code" id="langBtnCode">PT</span>
+      <svg class="lang-btn-caret" viewBox="0 0 10 6" aria-hidden="true">
+        <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="lang-menu" id="langMenu" role="listbox" aria-label="Idioma / Language"></div>
+  </div>
+
   <div class="links">
 
     <!-- TheFork -->
     <a class="link-btn btn-thefork" href="https://www.thefork.pt/restaurante/ohhh-tc-restaurante-r755094" target="_blank" rel="noopener">
-      <div class="icon">🍽️</div>
+      <div class="icon">
+        <svg class="fork-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 3v6a5 5 0 0 0 10 0V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 3v6M12 14v7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="text">
-        <span class="text-main">Reservar Mesa</span>
-        <span class="text-sub">via TheFork</span>
+        <span class="text-main" data-i18n="book">Reservar Mesa</span>
+        <span class="text-sub" data-i18n="book_sub">via TheFork</span>
       </div>
     </a>
 
     <!-- Ementa -->
     <a class="link-btn btn-menu" href="https://jashe1728.github.io/ohhhtc-menu/" target="_blank" rel="noopener">
-      <div class="icon">📖</div>
+      <div class="icon">
+        <svg class="menu-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 7h7M9 11h5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="text">
-        <span class="text-main">Ver Ementa</span>
-        <span class="text-sub">Menu digital completo</span>
+        <span class="text-main" data-i18n="menu">Ver Ementa</span>
+        <span class="text-sub" data-i18n="menu_sub">Menu digital completo</span>
       </div>
     </a>
 
@@ -185,8 +264,8 @@
         </svg>
       </div>
       <div class="text">
-        <span class="text-main">Como Chegar</span>
-        <span class="text-sub">Google Maps</span>
+        <span class="text-main" data-i18n="directions">Como Chegar</span>
+        <span class="text-sub" data-i18n="directions_sub">Google Maps</span>
       </div>
     </a>
 
@@ -200,16 +279,124 @@
         </svg>
       </div>
       <div class="text">
-        <span class="text-main">Instagram</span>
-        <span class="text-sub">@ohhh.tc</span>
+        <span class="text-main" data-i18n="insta">Instagram</span>
+        <span class="text-sub" data-i18n="insta_sub">@ohhh.tc</span>
       </div>
     </a>
 
   </div>
 
-  <p class="footer">O mar e a terra no prato, com sabor e atitude</p>
+  <p class="footer" data-i18n="footer">O mar e a terra no prato, com sabor e atitude</p>
 
 </div>
 
+<script>
+  /* ── Inline SVG flags (render on every OS — Windows has no flag emoji font) ── */
+  const FLAGS = {
+    pt: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DA291C"/><rect width="12" height="20" fill="#046A38"/><circle cx="12" cy="10" r="3.2" fill="#FFE900" stroke="#6B3F1D" stroke-width=".8"/></svg>',
+    en: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="6"/><path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" stroke-width="3"/><path d="M0 10h30M15 0v20" stroke="#fff" stroke-width="6"/><path d="M0 10h30M15 0v20" stroke="#C8102E" stroke-width="3"/></svg>',
+    fr: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>',
+    es: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="4" width="30" height="12" fill="#F1BF00"/><rect x="13" y="7.5" width="4" height="5" fill="#AA151B"/></svg>',
+    it: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>',
+    de: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="6.7" fill="#000"/><rect y="6.7" width="30" height="6.6" fill="#DD0000"/><rect y="13.3" width="30" height="6.7" fill="#FFCE00"/></svg>',
+    zh: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#DE2910"/><path d="M7.5 1l1.18 3.45 3.58 0-2.9 2.15 1.04 3.45-2.9-2.15-2.9 2.15 1.04-3.45-2.9-2.15 3.58 0z" fill="#FFDE00"/><path d="M20.4 2.75l.41 1.2 1.25 0-1.01.75.36 1.2-1.01-.75-1.01.75.36-1.2-1.01-.75 1.25 0z" fill="#FFDE00"/><path d="M23.6 5.25l.41 1.2 1.25 0-1.01.75.36 1.2-1.01-.75-1.01.75.36-1.2-1.01-.75 1.25 0z" fill="#FFDE00"/><path d="M23.4 9.25l.41 1.2 1.25 0-1.01.75.36 1.2-1.01-.75-1.01.75.36-1.2-1.01-.75 1.25 0z" fill="#FFDE00"/><path d="M20.4 11.75l.41 1.2 1.25 0-1.01.75.36 1.2-1.01-.75-1.01.75.36-1.2-1.01-.75 1.25 0z" fill="#FFDE00"/></svg>'
+  };
+  const LANG_NAMES = { pt:'Português', en:'English', fr:'Français', es:'Español', it:'Italiano', de:'Deutsch', zh:'中文' };
+  const LANGS = ['pt','en','fr','es','it','de','zh'];
+
+  const I18N = {
+    pt: { book:'Reservar Mesa', book_sub:'via TheFork', menu:'Ver Ementa', menu_sub:'Menu digital completo', directions:'Como Chegar', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'O mar e a terra no prato, com sabor e atitude' },
+    en: { book:'Book a Table', book_sub:'via TheFork', menu:'View Menu', menu_sub:'Full digital menu', directions:'How to Get Here', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'Sea and land on the plate, with flavour and attitude' },
+    fr: { book:'Réserver une table', book_sub:'via TheFork', menu:'Voir la carte', menu_sub:'Menu numérique complet', directions:'Comment venir', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'La mer et la terre dans l\u2019assiette, avec saveur et attitude' },
+    es: { book:'Reservar Mesa', book_sub:'vía TheFork', menu:'Ver Menú', menu_sub:'Menú digital completo', directions:'Cómo Llegar', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'El mar y la tierra en el plato, con sabor y actitud' },
+    it: { book:'Prenota un Tavolo', book_sub:'via TheFork', menu:'Guarda il Menù', menu_sub:'Menù digitale completo', directions:'Come Arrivare', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'Il mare e la terra nel piatto, con sapore e atteggiamento' },
+    de: { book:'Tisch reservieren', book_sub:'über TheFork', menu:'Speisekarte ansehen', menu_sub:'Vollständige digitale Karte', directions:'Anfahrt', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'Meer und Land auf dem Teller, mit Geschmack und Haltung' },
+    zh: { book:'预订座位', book_sub:'通过 TheFork', menu:'查看菜单', menu_sub:'完整电子菜单', directions:'如何到达', directions_sub:'Google Maps', insta:'Instagram', insta_sub:'@ohhh.tc', footer:'盘中盛着海与陆，有滋味，也有态度' }
+  };
+
+  let LANG = 'pt';
+  function setLang(l, apply = true) {
+    LANG = (l && LANGS.includes(l)) ? l : 'pt';
+    try { localStorage.setItem('ohhhtc-lang', LANG); } catch (e) {}
+    document.documentElement.lang = LANG;
+    const flagEl = document.getElementById('langBtnFlag');
+    if (flagEl) flagEl.innerHTML = FLAGS[LANG] || '';
+    const codeEl = document.getElementById('langBtnCode');
+    if (codeEl) codeEl.textContent = LANG.toUpperCase();
+    if (apply) applyLang();
+  }
+
+  function detectLang() {
+    try {
+      const saved = localStorage.getItem('ohhhtc-lang');
+      if (saved && LANGS.includes(saved)) return saved;
+    } catch (e) {}
+    const nav = (navigator.language || 'pt').toLowerCase().slice(0, 2);
+    return LANGS.includes(nav) ? nav : 'pt';
+  }
+
+  function applyLang() {
+    const t = I18N[LANG] || I18N.pt;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key]) el.textContent = t[key];
+    });
+  }
+
+  function initLangSwitcher() {
+    const wrap = document.getElementById('langWrap');
+    const btn  = document.getElementById('langBtn');
+    const menu = document.getElementById('langMenu');
+    if (!wrap || !btn || !menu) return;
+
+    menu.innerHTML = LANGS.map(l =>
+      `<button type="button" class="lang-opt" data-lang="${l}" role="option" aria-selected="${l === LANG ? 'true' : 'false'}">
+         <span class="lang-opt-flag">${FLAGS[l] || ''}</span>
+         <span class="lang-opt-name">${LANG_NAMES[l] || l}</span>
+       </button>`
+    ).join('');
+
+    const close = () => { wrap.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = wrap.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    menu.addEventListener('click', e => {
+      const opt = e.target.closest('.lang-opt');
+      if (!opt) return;
+      setLang(opt.dataset.lang);
+      close();
+    });
+
+    document.addEventListener('click', close);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowDown' && wrap.classList.contains('open')) {
+        const opts = [...menu.querySelectorAll('.lang-opt')];
+        const i = opts.findIndex(o => o.dataset.lang === LANG);
+        opts[(i + 1) % opts.length]?.focus();
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowUp' && wrap.classList.contains('open')) {
+        const opts = [...menu.querySelectorAll('.lang-opt')];
+        const i = opts.findIndex(o => o.dataset.lang === LANG);
+        opts[(i - 1 + opts.length) % opts.length]?.focus();
+        e.preventDefault();
+      }
+    });
+    menu.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.classList.contains('lang-opt')) {
+        setLang(e.target.dataset.lang);
+        close();
+      }
+    });
+  }
+
+  setLang(detectLang(), false);
+  initLangSwitcher();
+</script>
 </body>
 </html>
